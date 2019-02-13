@@ -33,7 +33,7 @@ public class CompetenceFilter implements Filter{
                 ServletOutputStream out = servletResponse.getOutputStream();
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("success",false);
-                jsonObject.put("message","cookie is null");
+                jsonObject.put("message","cookie is -null");
                 out.write(jsonObject.toString().getBytes());
                 out.flush();
             }
