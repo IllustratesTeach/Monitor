@@ -25,12 +25,5 @@ public class FilterInitializer implements WebApplicationInitializer {
                 ,new ShallowEtagHeaderFilter()).addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST)
                 ,true
                 ,"/user/searchUserInfo");
-        servletContext.addFilter("shiroFilter"
-                ,new ShiroFilter()).addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST
-                                                                        ,DispatcherType.FORWARD
-                                                                        ,DispatcherType.INCLUDE
-                                                                        ,DispatcherType.ERROR)
-                ,true
-                ,"/*");
     }
 }
