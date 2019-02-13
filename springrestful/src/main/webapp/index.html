@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>restful-spring</title>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript">
+
+	
+	/*
+		提交数据
+		注:更新、删除都属于提交数据
+	*/
+	function postUser()
+	{
+		$.ajax(
+				"user/saveUserInfo"
+                , {
+                      async: true
+			        , cache: false
+                    , dataType: "json"
+			        , data: { 
+			        		  "name": "jask"
+	            			, "password": "0109"
+	            			, "ip":"111"
+	            			, "marker":"aa"
+	                		}
+			        , type: "POST"
+			        , processData: true
+			        , success: function (data, textStatus, jqXHR) {
+			            if (textStatus == "success") {
+			            		alert(data.message);
+			            }
+			        }
+			        , error:function(XMLHttpRequest, textStatus, errorThrown){
+			        	 //调试用
+			        	 alert(XMLHttpRequest.status);
+			        	 alert(XMLHttpRequest.readyState);
+			        	 alert(textStatus);
+			        	 alert(errorThrown);
+		            }
+
+                }
+    	);
+		
+	}
+	
+	/*
+		查询数据
+	*/
+	function searchInfo()
+	{
+		$.ajax(
+				"user/searchUserInfo"
+				
+                , {
+                    async: true
+			        , cache: true
+                    , dataType: "json"
+			        , data: {}
+			        , type: "GET"
+					, ifModified:false
+			        , processData: true
+			        , success: function (data, textStatus, xhr) {
+			            if (textStatus == "success") {
+			            	if(data.success){
+			            		alert(data.rows);
+			            	}
+			            	else
+			            	{
+			            		alert(data.message);	
+			            	}
+			            }
+			        }
+			        , error:function(XMLHttpRequest, textStatus, errorThrown){
+			        	 
+		            }
+
+                }
+    	);
+		
+	}
+</script>
+</head>
+<body>
+	<input type="button" id="btn" name="btn" value="添加" onclick="postUser()">
+	<input type="button" id="searchinfo" name="searchinfo" value="查询" onclick="searchInfo()">
+</body>
+</html>
