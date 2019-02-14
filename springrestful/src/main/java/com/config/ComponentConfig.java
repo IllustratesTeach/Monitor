@@ -1,7 +1,6 @@
 package com.config;
 
-import com.peoplespot.services.UserService;
-import org.springframework.context.annotation.Bean;
+
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -10,9 +9,4 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ComponentConfig {
 
-    @Bean
-    public UserService userService(){
-        UserService userService = new UserService();
-        return userService;
-    }
 }

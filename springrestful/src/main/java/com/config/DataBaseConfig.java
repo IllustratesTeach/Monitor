@@ -1,60 +1,80 @@
 package com.config;
 
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.context.annotation.*;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.context.annotation.*;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.Database;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.persistence.EntityManagerFactory;
 import java.beans.PropertyVetoException;
+import java.util.Properties;
 
 /**
  * Created by yuchen on 2018/11/1.
  */
 @Configuration
-//@ComponentScan(basePackages = "com.soundsystem") //隐式声明
+@EnableTransactionManagement
+@EnableJpaRepositories(basePackages = "com.dao")
 public class DataBaseConfig {
 
     @Bean
-    public ComboPooledDataSource dataSource() throws PropertyVetoException {
-        ComboPooledDataSource dataSource = new ComboPooledDataSource();
-        dataSource.setDriverClass("com.mysql.jdbc.Driver");
-        dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/test");
-        dataSource.setUser("root");
-        dataSource.setPassword("root");
-        dataSource.setMinPoolSize(10);
-        dataSource.setMaxPoolSize(60);
-        dataSource.setInitialPoolSize(10);
-        dataSource.setAcquireRetryAttempts(30);
-        dataSource.setAcquireRetryDelay(1000);
-        dataSource.setBreakAfterAcquireFailure(true);
-        dataSource.setTestConnectionOnCheckout(true);
-        dataSource.setTestConnectionOnCheckin(true);
-        return dataSource;
+    public HikariDataSource dataSource(){
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setDriverClassName("com.mysql.jdbc.Driver");
+        hikariConfig.setJdbcUrl("jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8");
+        hikariConfig.setUsername("root");
+        hikariConfig.setPassword("root");
+        hikariConfig.setConnectionTestQuery("select 1");
+        hikariConfig.setAutoCommit(false);
+        hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
+        hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");
+        hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        hikariConfig.setMaximumPoolSize(5);
+
+        return new HikariDataSource(hikariConfig);
     }
 
     @Bean
-    public DataSourceTransactionManager dataSourceTransactionManager(ComboPooledDataSource dataSource){
-        DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
-        dataSourceTransactionManager.setDataSource(dataSource);
-        return dataSourceTransactionManager;
-    }
-
-
-    @Bean
-    public SqlSessionFactory sqlSessionFactory(ComboPooledDataSource dataSource) throws Exception {
-        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(dataSource);
-        sqlSessionFactoryBean.setConfigLocation(new ClassPathResource("config/mybatis-configuration.xml"));
-        return sqlSessionFactoryBean.getObject();
+    public JpaTransactionManager jpaTransactionManager(HikariDataSource dataSource){
+        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
+        jpaTransactionManager.setDataSource(dataSource);
+        return jpaTransactionManager;
     }
 
     @Bean
-    public SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory){
-        SqlSessionTemplate sqlSessionTemplate = new SqlSessionTemplate(sqlSessionFactory);
-        return sqlSessionTemplate;
+    public EntityManagerFactory entityManagerFactory(HikariDataSource dataSource) throws PropertyVetoException {
+        LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+        localContainerEntityManagerFactoryBean.setDataSource(dataSource);
+        HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
+        hibernateJpaVendorAdapter.setDatabase(Database.HSQL);
+        hibernateJpaVendorAdapter.setGenerateDdl(true);
+        localContainerEntityManagerFactoryBean.setJpaVendorAdapter(hibernateJpaVendorAdapter);
+        localContainerEntityManagerFactoryBean.setPackagesToScan("com.entity");
+        Properties properties = new Properties();
+        properties.setProperty("hibernate.ejb.naming_strategy","org.hibernate.cfg.ImprovedNamingStrategy");
+        properties.setProperty("hibernate.dialect","org.hibernate.dialect.MySQL5InnoDBDialect");
+        properties.setProperty("hibernate.show_sql","true");
+        properties.setProperty("hibernate.format_sql","true");
+        properties.setProperty("hibernate.hbm2ddl.auto","update");
+
+        localContainerEntityManagerFactoryBean.setJpaProperties(properties);
+        localContainerEntityManagerFactoryBean.setPersistenceUnitName("jpa");
+        localContainerEntityManagerFactoryBean.afterPropertiesSet();
+        return localContainerEntityManagerFactoryBean.getObject();
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(HikariDataSource dataSource) throws PropertyVetoException {
+        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
+        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory(dataSource));
+        return jpaTransactionManager;
     }
 }

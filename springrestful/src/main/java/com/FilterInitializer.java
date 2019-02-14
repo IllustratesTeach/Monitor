@@ -1,7 +1,6 @@
 package com;
 
 import com.filter.CompetenceFilter;
-import org.apache.shiro.web.servlet.ShiroFilter;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
