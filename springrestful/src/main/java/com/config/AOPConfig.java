@@ -13,8 +13,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @EnableAspectJAutoProxy
 public class AOPConfig {
 
-    @Bean
-    public Audience audience(){
-        return new Audience();
-    }
+//    @Bean
+//    public Audience audience(){
+//        return new Audience();
+//    }
 }
