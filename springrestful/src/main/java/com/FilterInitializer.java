@@ -1,5 +1,6 @@
 package com;
 
+import com.cloud.CloudManager;
 import com.filter.CompetenceFilter;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
@@ -24,5 +25,13 @@ public class FilterInitializer implements WebApplicationInitializer {
                 ,new ShallowEtagHeaderFilter()).addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST)
                 ,true
                 ,"/user/searchUserInfo");
+
+        startMonitor();
+    }
+
+    private void startMonitor(){
+        CloudManager cloudManager = new CloudManager("localhost:2181");
+        cloudManager.createProjectPersistNode();
+        cloudManager.exist(CloudManager.ZK_PERJECT_NODE + "/"+ "300311000000");
     }
 }
