@@ -43,13 +43,6 @@ public class DataBaseConfig {
     }
 
     @Bean
-    public JpaTransactionManager jpaTransactionManager(HikariDataSource dataSource){
-        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-        jpaTransactionManager.setDataSource(dataSource);
-        return jpaTransactionManager;
-    }
-
-    @Bean
     public EntityManagerFactory entityManagerFactory(HikariDataSource dataSource) throws PropertyVetoException {
         LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         localContainerEntityManagerFactoryBean.setDataSource(dataSource);
@@ -74,6 +67,7 @@ public class DataBaseConfig {
     @Bean
     public PlatformTransactionManager transactionManager(HikariDataSource dataSource) throws PropertyVetoException {
         JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
+        jpaTransactionManager.setDataSource(dataSource);
         jpaTransactionManager.setEntityManagerFactory(entityManagerFactory(dataSource));
         return jpaTransactionManager;
     }
