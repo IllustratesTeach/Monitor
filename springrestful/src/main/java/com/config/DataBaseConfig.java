@@ -25,13 +25,17 @@ import java.util.Properties;
 @EnableJpaRepositories(basePackages = "com.dao")
 public class DataBaseConfig {
 
+    public DataBaseConfig(){
+        System.out.println(123);
+    }
+
     @Bean
     public HikariDataSource dataSource(){
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setDriverClassName("com.mysql.jdbc.Driver");
-        hikariConfig.setJdbcUrl("jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8");
+        hikariConfig.setJdbcUrl("jdbc:mysql://localhost:3306/monitor?useUnicode=true&characterEncoding=utf8");
         hikariConfig.setUsername("root");
-        hikariConfig.setPassword("root");
+        hikariConfig.setPassword("admin");
         hikariConfig.setConnectionTestQuery("select 1");
         hikariConfig.setAutoCommit(false);
         hikariConfig.addDataSourceProperty("cachePrepStmts", "true");

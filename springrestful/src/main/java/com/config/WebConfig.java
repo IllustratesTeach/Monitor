@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan("com.peoplespot.controller")
+@ComponentScan("com.controller")
 public class WebConfig extends WebMvcConfigurerAdapter{
 
 
@@ -46,8 +46,8 @@ public class WebConfig extends WebMvcConfigurerAdapter{
     public ViewResolver internalResourceViewResolver(){
         InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();
         internalResourceViewResolver.setOrder(2);
-        internalResourceViewResolver.setPrefix("/WEB-INF/view/");
-        internalResourceViewResolver.setSuffix(".jsp");
+        internalResourceViewResolver.setPrefix("/WEB-INF/");
+        internalResourceViewResolver.setSuffix(".html");
         internalResourceViewResolver.setExposeContextBeansAsAttributes(true);
         return internalResourceViewResolver;
     }

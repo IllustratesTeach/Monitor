@@ -30,8 +30,8 @@ public class FilterInitializer implements WebApplicationInitializer {
     }
 
     private void startMonitor(){
-        CloudManager cloudManager = new CloudManager("localhost:2181");
-        cloudManager.createProjectPersistNode();
-        cloudManager.exist(CloudManager.ZK_PERJECT_NODE + "/"+ "300311000000");
+//        CloudManager cloudManager = new CloudManager("localhost:2181");
+//        cloudManager.createProjectPersistNode();
+//        cloudManager.exist(CloudManager.ZK_PERJECT_NODE + "/"+ "300311000000");
     }
 }

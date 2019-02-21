@@ -10,6 +10,7 @@ import java.util.List;
  * @since 2019/2/13
  */
 public interface UserDao extends Repository<Person,Integer>{
+
     List<Person> findBySex(String sex);
 
     Person save(Person person);
