@@ -6,12 +6,13 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "infomation")
-public class Infomation {
+@Table(name = "information")
+public class Information {
 
     @Id
     @GenericGenerator(name="idGenerator", strategy="uuid") //这个是hibernate的注解/生成32位UUID
     @GeneratedValue(generator="idGenerator")
+    @Column(name = "id")
     private String id;
 
     @Column(name = "name")

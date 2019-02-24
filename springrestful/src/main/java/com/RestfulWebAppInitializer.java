@@ -1,7 +1,7 @@
 package com;
 
-import com.config.RootConfig;
-import com.config.WebConfig;
+import com.bootstrap.RootConfig;
+import com.bootstrap.WebConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**

@@ -1,5 +1,8 @@
 package com.cloud;
 
+import com.constant.Constant;
+import com.dao.InformationDao;
+import com.entity.Information;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
@@ -19,9 +22,12 @@ public class CloudManager {
 
     private String connectString = "";
 
-    public CloudManager(String connectString){
+    private static InformationDao informationDao;
+
+    public CloudManager(String connectString,InformationDao informationDao){
 
         this.connectString = connectString;
+        this.informationDao = informationDao;
     }
     /**
      * 用于标示是哪个工程的znode节点
@@ -31,6 +37,12 @@ public class CloudManager {
     private static CountDownLatch latch = new CountDownLatch(1);
 
     private static Optional<ZooKeeper> zooKeeper = Optional.empty();
+
+    private void updateStatus(String id,int status){
+        Information information = informationDao.findByCode(id);
+        information.setStatus(status);
+        informationDao.save(information);
+    }
 
 
     /**
@@ -70,20 +82,23 @@ public class CloudManager {
         }
     }
 
-    public void exist(String childrenNode){
+    public void exist(String childrenCode){
         Stat stat  = new Stat();
+
         try {
-            getZooKeeper().get().exists(childrenNode
+            getZooKeeper().get().exists(childrenCode
                     ,(event) -> {
                         if(Watcher.Event.KeeperState.SyncConnected == event.getState()){
 
                             if(Watcher.Event.EventType.NodeDeleted == event.getType()){
-                                //TODO:update state 0
+                                updateStatus(childrenCode.split("/")[2], Constant.ABNORMAL);
                                 logger.info("node not exist svr not run");
+                                exist(childrenCode);
                             }
                             if(Watcher.Event.EventType.NodeCreated == event.getType()){
-                                //TODO:update state 1
+                                updateStatus(childrenCode.split("/")[2],Constant.NORMAL);
                                 logger.info("node exist svr running");
+                                exist(childrenCode);
                             }
                         }
                     }
@@ -97,14 +112,18 @@ public class CloudManager {
     private AsyncCallback.StatCallback existCallback = (rc, path, ctx, name) -> {
         switch(KeeperException.Code.get(rc)){
             case CONNECTIONLOSS:
-            case OK:
-            case NONODE:
                 exist(path);
+                break;
+            case OK:
+                break;
+            case NONODE:
                 break;
             default:
                 break;
         }
     };
+
+
 
 
 }

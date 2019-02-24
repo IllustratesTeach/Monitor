@@ -29,7 +29,7 @@
             //初始化Table
             oTableInit.Init = function () {
                 $('#tb_departments').bootstrapTable({
-                    url: '/getInfomationList',         //请求后台的URL（*）
+                    url: '/getInformationList',         //请求后台的URL（*）
                     method: 'POST',                      //请求方式（*）
                     toolbar: '#toolbar',                //工具按钮用哪个容器
                     striped: true,                      //是否显示行间隔色
@@ -97,7 +97,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/getInfomation" ,
+                    url: "/getInformation" ,
                     cache : false,
                     traditional: true,
                     data: {ids : idArray},
@@ -111,8 +111,8 @@
                         $("#host").val(data.host);
                         $('#myModal').modal();
                     },
-                    error : function() {
-                        alert("修改失败！");
+                    error : function(e) {
+                        alert("修改失败:" + e.message);
                     }
                 });
             }else{
@@ -131,7 +131,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/deleteInfomation" ,
+                    url: "/deleteInformation" ,
                     cache : false,
                     traditional: true,
                     data: {ids : idArray},
@@ -139,8 +139,8 @@
 						alert("删除成功");
                         window.location.reload()
                     },
-                    error : function() {
-                        alert("删除失败！");
+                    error : function(e) {
+                        alert("删除失败:" + e.message);
                     }
                 });
 
@@ -154,14 +154,19 @@
             $.ajax({
                 type: "POST",
                 dataType: "json",
-                url: "/addInfomation" ,
+                url: "/addInformation" ,
                 data: $('#infomationForm').serialize(),
-                success: function (result) {
-					alert("保存成功");
-                    window.location.reload()
+                success: function (data, textStatus, jqXHR) {
+					if (textStatus == "success"){
+                        if(data.success){
+                            window.location.reload()
+						}else{
+                            alert(data.message)
+						}
+					}
                 },
-                error : function() {
-                    alert("保存失败！");
+                error : function(e) {
+                    alert("保存失败:" + e.statusText);
                 }
             });
         };
