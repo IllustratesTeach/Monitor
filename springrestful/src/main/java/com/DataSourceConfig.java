@@ -3,6 +3,7 @@ package com;
 
 
 import com.config.Config;
+import com.constant.Constant;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.*;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import javax.persistence.EntityManagerFactory;
 import javax.xml.bind.JAXB;
 import java.beans.PropertyVetoException;
+import java.io.File;
 import java.util.Properties;
 
 /**
@@ -32,8 +34,7 @@ public class DataSourceConfig {
 
     @Bean
     public Config config(){
-        Config config = JAXB.unmarshal(getClass().getResourceAsStream("/config/config.xml")
-                , Config.class);
+        Config config = JAXB.unmarshal(getClass().getResourceAsStream("/config.xml"), Config.class);
         return config;
     }
 

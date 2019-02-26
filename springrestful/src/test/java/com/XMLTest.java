@@ -24,4 +24,10 @@ public class XMLTest {
         Assert.assertNotNull(config.getDataBaseConfig());
         Assert.assertNotNull(config.getZookeeperConfig());
     }
+
+    @Test
+    public void test_Jarfile(){
+        File file = new File("/Users/yuchen/IdeaProjects/Monitor/springrestful/lib/springrestful-0.0.1-SNAPSHOT.jar");
+        System.out.println(file.isDirectory());
+    }
 }

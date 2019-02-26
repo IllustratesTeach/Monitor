@@ -9,9 +9,21 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement(name = "config")
 public class Config {
 
+    private WebConfig webConfig;
+
     private DataBaseConfig dataBaseConfig;
 
     private ZookeeperConfig zookeeperConfig;
+
+    @XmlElement(name = "web_config")
+    public WebConfig getWebConfig() {
+        return webConfig;
+    }
+
+    public void setWebConfig(WebConfig webConfig) {
+        this.webConfig = webConfig;
+    }
+
 
     @XmlElement(name = "database_config")
     public DataBaseConfig getDataBaseConfig() {
