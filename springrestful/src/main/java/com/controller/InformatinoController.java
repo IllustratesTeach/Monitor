@@ -27,13 +27,23 @@ public class InformatinoController {
         Map<String,Object> resultMap = new HashMap<>();
         try{
             Information information = new Information();
-            information.setName(request.getParameter("name"));
-            information.setCode(request.getParameter("code"));
-            information.setIp(request.getParameter("ip"));
-            information.setHost(request.getParameter("host"));
-            information.setInitTime(new Date());
-            information.setIsStart(Constant.START_MONITOR);
-            informationDao.save(information);
+            String id = request.getParameter("id");
+            if(null != id && id.length()>0){
+                information =informationDao.findById(id);
+                information.setName(request.getParameter("name"));
+                information.setCode(request.getParameter("code"));
+                information.setIp(request.getParameter("ip"));
+                information.setHost(request.getParameter("host"));
+                informationDao.save(information);
+            }else{
+                information.setName(request.getParameter("name"));
+                information.setCode(request.getParameter("code"));
+                information.setIp(request.getParameter("ip"));
+                information.setHost(request.getParameter("host"));
+                information.setInitTime(new Date());
+                information.setIsStart(Constant.START_MONITOR);
+                informationDao.save(information);
+            }
             resultMap.put("success",true);
             resultMap.put("message","添加成功");
         }catch(Exception ex){
